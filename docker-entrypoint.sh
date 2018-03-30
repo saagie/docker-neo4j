@@ -145,14 +145,18 @@ unset NEO4J_dbms_txLog_rotation_retentionPolicy NEO4J_UDC_SOURCE \
 : ${NEO4J_causal__clustering_raft__listen__address:=0.0.0.0:7000}
 : ${NEO4J_causal__clustering_raft__advertised__address:=$(hostname):7000}
 
-if [ ! -z $PORT0 ]; then
+if [ -z $PORT0 ]; then
+  echo "Running Neo4j web interface on default port: 7474"
+else
   echo >&2  "Running Neo4j web interface on port: $PORT0"
-  export NEO4J_dbms_connector_http_listen__address=0.0.0.0:$PORT0
+  export NEO4J_dbms_connector_https_listen__address=127.0.0.1:$PORT0
 fi
 
-if [ ! -z $PORT1 ]; then
+if [ -z $PORT1 ]; then
+  echo "Neo4j Bolt listening on default port: 7687"
+else
   echo >&2  "Neo4j Bolt listening on port: $PORT1"
-  export NEO4J_dbms_connector_bolt_listen__address=0.0.0.0:$PORT1
+  export NEO4J_dbms_connector_bolt_listen__address=127.0.0.1:$PORT1
 fi
 
 if [ -d /conf ]; then
